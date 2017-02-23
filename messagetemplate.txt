@@ -1,0 +1,8 @@
+Hello <<name>>,
+Your current scores on Standards are as follows:
+
+<<group_scores>>
+
+Thanks! Please let me know if you have any questions.
+
+Mr. Rueckert
