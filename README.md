@@ -18,3 +18,6 @@ There are a few assumptions made in order to run the program without exceptions 
 The GUI is built on TKinter, which I am learning for the first time. I am very interested in collaborating with someone who knows Tkinter well to make it nice and pretty (a Tkinterer?)
 
 Additionally, I'm interested in optimizing code wherever possible!
+
+Thanks to StackOverflow user Bryan Oakley and his explanation for a method to switch windows in Tkinter. Awesome stuff.
+Link to thread here: http://stackoverflow.com/questions/7546050/switch-between-two-frames-in-tkinter
