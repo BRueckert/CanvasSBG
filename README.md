@@ -12,6 +12,8 @@ There are a few assumptions made in order to run the program without exceptions 
 	The user knows the account ID # for their institutional account. This may have to be obtained from the site admin.
 	The program looks for a config file within the same directory. There is functionality included to generate one.
 	The program also looks for the messagetemplate.txt file in the same directory when generating student messages.
+	baseURL is your institutional canvas URL --> https://YOUR_DOMAIN.instructure.com
+	apiURL is --> https://YOUR_DOMAIN.instructure.com/api/v1/ --> These are used in a variety of calls to the Canvas API
     
 The GUI is built on TKinter, which I am learning for the first time. I am very interested in collaborating with someone who knows Tkinter well to make it nice and pretty (a Tkinterer?)
 
