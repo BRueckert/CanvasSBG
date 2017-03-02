@@ -8,7 +8,7 @@ Created on Wed Feb 15 08:56:04 2017
 import tkinter as tk
 from tkinter import messagebox
 from statistics import mean
-import requests, pickle, json
+import requests, pickle, json, csv
 
 class SBGApp(tk.Tk):
 
@@ -141,7 +141,7 @@ class SBGApp(tk.Tk):
                 try:
                     temp.append(j['outcome']['id'])
                 except TypeError:
-                    print('Passing over "error" response')
+                    print('Skipping "NoneType"')
             tempD['outcomes'] = temp
             outcomesByGroup.append(tempD)
              
@@ -165,9 +165,7 @@ class SBGApp(tk.Tk):
         
         #removes any "results" items with no group scores
         for i in range(len(users)):
-            for j in range(len(users[i]['results'])):
-                if len(users[i]['results'][j]['group_scores']) < 1:
-                     del users[i]['results'][j]
+            users[i]['results'][:] = [x for x in users[i]['results'] if len(x['group_scores']) > 0]
                      
         #create new key in results titled "mean", which is average of group rollup scores
         for i in range(len(users)):
@@ -222,9 +220,33 @@ class SBGApp(tk.Tk):
             #print(template)
             self.show_frame(PageFive)
                         
+                        
     def closeProgram(self):
         self.destroy()
-
+    
+    
+    def genTeachReport(self):
+        csvOut = []
+        heads = ['name','login_ID',]
+        for i in self.app_data['fullGBook'][0]['results']:
+            heads.append(i['title'])
+        for i in self.app_data['fullGBook']:
+            toAdd = []
+            toAdd.append(i['name'])
+            toAdd.append(i['login_id'])
+            for k in i['results']:
+                for j in heads:
+                    if j == k['title']:
+                        toAdd.append(k['mean'])
+            csvOut.append(toAdd)
+        
+        with open('StandardsReport.csv', 'w', newline='') as csvfile:
+            writeOut = csv.writer(csvfile, delimiter=',',dialect='excel')
+            writeOut.writerow(heads)
+            for i in csvOut:
+                writeOut.writerow(i)
+        messagebox.showinfo(title='Export', message='Data exported to CSV')
+        
         
 class FirstPage(tk.Frame):
     
@@ -282,7 +304,7 @@ class PageTwo(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self,parent)
         self.controller = controller
-        lab1 = tk.Label(self, text='Account configuaration loaded')
+        lab1 = tk.Label(self, text='Account configuration loaded')
         lab2 = tk.Label(self, text='Please enter your course ID #: ')
         e1 = tk.Entry(self)
         but1 = tk.Button(self, text='Set Course', command=lambda: self.controller.getCourseTitle(e1.get()))
@@ -316,11 +338,12 @@ class PageFour(tk.Frame):
         lab1 = tk.Label(self, text='Data is ready to send to students')
         but1 = tk.Button(self, text='Preview message', command=lambda: self.controller.genPreviewMessage())
         but2 = tk.Button(self, text='Send to students', command=lambda: self.controller.genMessages())
+        but3 = tk.Button(self, text='Create teacher report', command=lambda: self.controller.genTeachReport())
         
         lab1.grid(row=0,column=0)
         but1.grid(row=1,column=0)
         but2.grid(row=2,column=0)
-        
+        but3.grid(row=3,column=0)
         
         
 class PageFive(tk.Frame):
@@ -352,4 +375,5 @@ class StudentPreview(tk.Frame):
 
 
 app = SBGApp()
+app.wm_title('Canvas Power-Standard Score Generator')
 app.mainloop()
