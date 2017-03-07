@@ -141,7 +141,7 @@ class SBGApp(tk.Tk):
                 try:
                     temp.append(j['outcome']['id'])
                 except TypeError:
-                    print('Skipping "NoneType"')
+                    print('Skipping "NoneType" in response. No big deal.')
             tempD['outcomes'] = temp
             outcomesByGroup.append(tempD)
              
@@ -308,10 +308,12 @@ class PageTwo(tk.Frame):
         lab2 = tk.Label(self, text='Please enter your course ID #: ')
         e1 = tk.Entry(self)
         but1 = tk.Button(self, text='Set Course', command=lambda: self.controller.getCourseTitle(e1.get()))
-        lab1.grid(row=0,column=0)
-        lab2.grid(row=1,column=0)
+        but2 = tk.Button(self, text='Return to previous page', command=lambda: self.controller.show_frame(FirstPage))
+        lab1.grid(row=0,column=0, sticky='w')
+        lab2.grid(row=1,column=0, sticky='w')
         e1.grid(row=1,column=2)
-        but1.grid(row=2,column=0)
+        but1.grid(row=1,column=3, sticky='w', padx=10)
+        but2.grid(row=2,column=0, sticky='w', pady=5)
     
     
 class PageThree(tk.Frame):
@@ -320,14 +322,14 @@ class PageThree(tk.Frame):
         tk.Frame.__init__(self,parent)
         self.controller = controller
         lab1 = tk.Label(self, text='Account configuaration loaded')
-        lab2 = tk.Label(self, text='Course: ')
+        lab2 = tk.Label(self, text='Course selected: ')
         lab3 = tk.Label(self, textvariable=self.controller.app_data['courseTitle'])
         but1 = tk.Button(self, text='Get Data from Canvas', command=lambda: self.controller.buildGradebook(self.controller.app_data['courseID'].get()))       
         
-        lab1.grid(row=0,column=0)
-        lab2.grid(row=1,column=0)
-        lab3.grid(row=2,column=0)
-        but1.grid(row=3,column=0)
+        lab1.grid(row=0,column=0, sticky='w')
+        lab2.grid(row=1,column=0, sticky='w')
+        lab3.grid(row=2,column=0, sticky='w')
+        but1.grid(row=3,column=0, sticky='w')
         
         
 class PageFour(tk.Frame):
@@ -342,7 +344,7 @@ class PageFour(tk.Frame):
         
         lab1.grid(row=0,column=0)
         but1.grid(row=1,column=0)
-        but2.grid(row=2,column=0)
+        but2.grid(row=2,column=0, pady=10)
         but3.grid(row=3,column=0)
         
         
