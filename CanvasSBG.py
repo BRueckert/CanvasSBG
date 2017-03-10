@@ -34,11 +34,9 @@ class SBGApp(tk.Tk):
         self.frames = {}
         
         for F in (FirstPage, ConfigsPage, PageTwo, PageThree, PageFour, PageFive, StudentPreview):
-
             frame = F(container, self)
             self.frames[F] = frame
             frame.grid(row=0, column=0, sticky="nsew")
-        
         self.show_frame(FirstPage)
 
     def show_frame(self, page):
@@ -69,7 +67,7 @@ class SBGApp(tk.Tk):
     
     def getCourseTitle(self, courseID):
         '''
-        Sets the class instance variable to display course title
+        Sets the class instance variable in order to display course title
         '''
         r = requests.get(self.app_data['apiURL'].get() + 'courses/' + courseID,
                 headers = {'Authorization': 'Bearer {}'.format(self.app_data['token'].get())})
@@ -77,7 +75,6 @@ class SBGApp(tk.Tk):
         #print(json.dumps(d,sort_keys=True,indent=4))
         self.app_data['courseID'].set(courseID)
         self.app_data['courseTitle'].set(d['name'])
-        #tk.messagebox.showinfo(title='Course Set', message='Course has been set to ' + self.app_data['courseTitle'].get())
         self.show_frame(PageThree)
     
     def buildGradebook(self, courseID):    
@@ -167,13 +164,12 @@ class SBGApp(tk.Tk):
         for i in range(len(users)):
             users[i]['results'][:] = [x for x in users[i]['results'] if len(x['group_scores']) > 0]
                      
-        #create new key in results titled "mean", which is average of group rollup scores
+        #create new key/value pair in results titled "mean", which is average of group rollup scores
         for i in range(len(users)):
             for j in range(len(users[i]['results'])):
                 users[i]['results'][j]['mean'] = mean(users[i]['results'][j]['group_scores'])
                 
         self.app_data['fullGBook'] = users
-        #messagebox.showinfo(title='Data Retrieved', message='Data from Canvas has been retrieved')
         self.show_frame(PageFour)
 
 
@@ -197,7 +193,9 @@ class SBGApp(tk.Tk):
         self.show_frame(StudentPreview)
         
     def genMessages(self):
-
+        '''
+        Cycles through app_data fullGBook, generating and sending messages to student Canvas inboxes
+        '''
         for i in self.app_data['fullGBook']:
             t = open('messagetemplate.txt', 'r')
             template = t.read()
@@ -226,6 +224,10 @@ class SBGApp(tk.Tk):
     
     
     def genTeachReport(self):
+        '''
+        Creates a CSV file with name, loginID, and group scores for each student in 
+        app_data fullGBook. Headers are included.
+        '''
         csvOut = []
         heads = ['name','login_ID',]
         for i in self.app_data['fullGBook'][0]['results']:
@@ -253,7 +255,8 @@ class FirstPage(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self,parent)
         self.controller = controller
-        b1 = tk.Button(self, text='Create Config File', command=lambda: self.controller.show_frame(ConfigsPage))
+        b1 = tk.Button(self, text='Create Config File', 
+                       command=lambda: self.controller.show_frame(ConfigsPage))
         b2 = tk.Button(self, text='Load Configs', command=lambda: self.controller.setConfigs())
         b1.grid(row=0,column=0)
         b2.grid(row=0,column=1)
@@ -272,7 +275,8 @@ class ConfigsPage(tk.Frame):
         self.e3 = tk.Entry(self, width=50)
         self.e4 = tk.Entry(self, width=50)
         but1 = tk.Button(self, text='Create Config File', command=lambda: self.createPickle())
-        but2 = tk.Button(self, text='Return to previous page', command=lambda: self.controller.show_frame(FirstPage))
+        but2 = tk.Button(self, text='Return to previous page', 
+                         command=lambda: self.controller.show_frame(FirstPage))
         
         lab1.grid(row=0, column=0)
         lab2.grid(row=1, column=0)
@@ -307,8 +311,10 @@ class PageTwo(tk.Frame):
         lab1 = tk.Label(self, text='Account configuration loaded')
         lab2 = tk.Label(self, text='Please enter your course ID #: ')
         e1 = tk.Entry(self)
-        but1 = tk.Button(self, text='Set Course', command=lambda: self.controller.getCourseTitle(e1.get()))
-        but2 = tk.Button(self, text='Return to previous page', command=lambda: self.controller.show_frame(FirstPage))
+        but1 = tk.Button(self, text='Set Course', 
+                         command=lambda: self.controller.getCourseTitle(e1.get()))
+        but2 = tk.Button(self, text='Return to previous page', 
+                         command=lambda: self.controller.show_frame(FirstPage))
         lab1.grid(row=0,column=0, sticky='w')
         lab2.grid(row=1,column=0, sticky='w')
         e1.grid(row=1,column=2)
@@ -324,7 +330,8 @@ class PageThree(tk.Frame):
         lab1 = tk.Label(self, text='Account configuaration loaded')
         lab2 = tk.Label(self, text='Course selected: ')
         lab3 = tk.Label(self, textvariable=self.controller.app_data['courseTitle'])
-        but1 = tk.Button(self, text='Get Data from Canvas', command=lambda: self.controller.buildGradebook(self.controller.app_data['courseID'].get()))       
+        but1 = tk.Button(self, text='Get Data from Canvas', 
+                        command=lambda: self.controller.buildGradebook(self.controller.app_data['courseID'].get()))       
         
         lab1.grid(row=0,column=0, sticky='w')
         lab2.grid(row=1,column=0, sticky='w')
