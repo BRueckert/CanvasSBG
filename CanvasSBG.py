@@ -185,7 +185,7 @@ class SBGApp(tk.Tk):
 
         groupScores = ''
         for i in self.app_data['fullGBook'][0]['results']:
-            groupScores = groupScores + i['title'] + ': ' + str(i['mean']) + ' \n'
+            groupScores = groupScores + i['title'] + ': {number:.{digs}f} \n'.format(number=i['mean'], digs=2)
         
         template = template.replace('<<name>>', self.app_data['fullGBook'][0]['name'])
         template = template.replace('<<group_scores>>', groupScores)
@@ -202,7 +202,7 @@ class SBGApp(tk.Tk):
             t.close()
             groupScores = ''
             for k in i['results']:
-                groupScores = groupScores + k['title'] + ': ' + str(k['mean']) + ' \n'
+                groupScores = groupScores + k['title'] + ': {number:.{digs}f} \n'.format(number=k['mean'], digs=2)
             template = template.replace('<<name>>', i['name'])
             template = template.replace('<<group_scores>>', groupScores)
             
@@ -332,11 +332,13 @@ class PageThree(tk.Frame):
         lab3 = tk.Label(self, textvariable=self.controller.app_data['courseTitle'])
         but1 = tk.Button(self, text='Get Data from Canvas', 
                         command=lambda: self.controller.buildGradebook(self.controller.app_data['courseID'].get()))       
+        but2 = tk.Button(self, text='Return to previous page', command=lambda: self.controller.show_frame(PageTwo))
         
         lab1.grid(row=0,column=0, sticky='w')
         lab2.grid(row=1,column=0, sticky='w')
         lab3.grid(row=2,column=0, sticky='w')
         but1.grid(row=3,column=0, sticky='w')
+        but2.grid(row=3,column=1, sticky='w')
         
         
 class PageFour(tk.Frame):
