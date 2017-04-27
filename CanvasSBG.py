@@ -258,8 +258,8 @@ class FirstPage(tk.Frame):
         b1 = tk.Button(self, text='Create Config File', 
                        command=lambda: self.controller.show_frame(ConfigsPage))
         b2 = tk.Button(self, text='Load Configs', command=lambda: self.controller.setConfigs())
-        b1.grid(row=0,column=0)
-        b2.grid(row=0,column=1)
+        b1.grid(row=0,column=0, padx=5, pady=5)
+        b2.grid(row=0,column=1, padx=5, pady=5)
         
 class ConfigsPage(tk.Frame):
     
@@ -270,9 +270,12 @@ class ConfigsPage(tk.Frame):
         lab2 = tk.Label(self, text='API URL: ')
         lab3 = tk.Label(self, text='Account #')
         lab4 = tk.Label(self, text='Access Token: ')
-        self.e1 = tk.Entry(self, width=50)
-        self.e2 = tk.Entry(self, width=50)
-        self.e3 = tk.Entry(self, width=50)
+        default1 = tk.StringVar(self, 'https://micds.instructure.com')
+        default2 = tk.StringVar(self, 'https://micds.instructure.com/api/v1/')
+        default3 = tk.StringVar(self, '82689')
+        self.e1 = tk.Entry(self, width=50, textvariable=default1)
+        self.e2 = tk.Entry(self, width=50, textvariable=default2)
+        self.e3 = tk.Entry(self, width=50, textvariable=default3)
         self.e4 = tk.Entry(self, width=50)
         but1 = tk.Button(self, text='Create Config File', command=lambda: self.createPickle())
         but2 = tk.Button(self, text='Return to previous page', 
@@ -373,7 +376,7 @@ class StudentPreview(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self,parent)
         self.controller = controller
-        self.t1 = tk.Text(self, width=40, height=10, wrap='word')
+        self.t1 = tk.Text(self, width=50, height=10, wrap='word')
         but1 = tk.Button(self, text='Return', command=lambda: self.controller.show_frame(PageFour))
         but2 = tk.Button(self, text='Display Preview Text', command=lambda: self.showText())        
         self.t1.grid(row=0,column=0)
